@@ -4,47 +4,47 @@ namespace Platformer.Enemies
 {
     public class EnemyPatrol : MonoBehaviour
     {
-        [Header("Patrol Settings")]
-        [SerializeField] private Transform _leftPoint;
-        [SerializeField] private Transform _rightPoint;
+        [SerializeField] private Transform[] _points;
         [SerializeField] private float _speed = 2f;
 
-        private bool _movingRight = true;
-        private Vector3 _target;
-        private bool _active;
+        private int _targetIndex = 0;
+        private bool _isPatrolling = true;
 
-        public void BeginPatrol()
+        private void Start()
         {
-            /*if (_leftPoint == null || _rightPoint == null)
+            if (_points == null || _points.Length == 0)
             {
-                Debug.LogWarning("EnemyPatrol не заданы");
+                Debug.LogWarning($"{name}: Не заданы точки патруля");
+                enabled = false;
                 return;
-            }*/
+            }
 
-            _active = true;
-            _movingRight = true;
-            _target = _rightPoint.position;
-        }
-
-        public void StopPatrol()
-        {
-            _active = false;
+            transform.position = _points[0].position;
+            _targetIndex = 1 % _points.Length;
         }
 
         private void Update()
         {
+            if (!_isPatrolling || _points.Length < 2) return;
 
-            transform.position = Vector3.MoveTowards(transform.position, _target, _speed * Time.deltaTime);
+            Transform target = _points[_targetIndex];
+            transform.position = Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, _target) < 0.05f)
+            if (Vector3.Distance(transform.position, target.position) < 0.05f)
             {
-                _movingRight = !_movingRight;
-                _target = _movingRight ? _rightPoint.position : _leftPoint.position;
-
-                Vector3 scale = transform.localScale;
-                scale.x = _movingRight ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
-                transform.localScale = scale;
+                _targetIndex = (_targetIndex + 1) % _points.Length;
+                FlipDirection();
             }
         }
+
+        private void FlipDirection()
+        {
+            Vector3 scale = transform.localScale;
+            scale.x *= -1;
+            transform.localScale = scale;
+        }
+
+        public void StopPatrol() => _isPatrolling = false;
+        public void BeginPatrol() => _isPatrolling = true;
     }
 }
