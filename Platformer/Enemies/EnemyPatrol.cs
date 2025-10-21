@@ -14,7 +14,6 @@ namespace Platformer.Enemies
         {
             if (_points == null || _points.Length == 0)
             {
-                Debug.LogWarning($"{name}: Не заданы точки патруля");
                 enabled = false;
                 return;
             }
@@ -25,7 +24,10 @@ namespace Platformer.Enemies
 
         private void Update()
         {
-            if (!_isPatrolling || _points.Length < 2) return;
+            if (!_isPatrolling || _points.Length < 2)
+            {
+                return;
+            }
 
             Transform target = _points[_targetIndex];
             transform.position = Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);

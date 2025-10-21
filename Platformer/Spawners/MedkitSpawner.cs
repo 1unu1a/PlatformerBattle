@@ -1,13 +1,12 @@
 using UnityEngine;
 using Core;
-using Platformer.Enemies;
+using Platformer.Items;
 
 namespace Platformer.Spawners
 {
-    public class EnemySpawner : GenericSpawner<Enemy>
+    public class MedkitSpawner : GenericSpawner<Medkit>
     {
         [SerializeField] private Transform[] _spawnPoints;
-        [SerializeField] private Transform _player;
 
         protected override void Spawn()
         {
@@ -17,9 +16,8 @@ namespace Platformer.Spawners
             }
 
             Transform point = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
-            Enemy enemy = Pool.Get();
-            enemy.transform.position = point.position;
-            enemy.SetPlayer(_player);
+            Medkit medkit = Pool.Get();
+            medkit.transform.position = point.position;
         }
     }
 }
