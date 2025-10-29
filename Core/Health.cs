@@ -27,10 +27,15 @@ namespace Core
                 return;
             }
 
-            _currentHealth -= amount;
+            if (amount < 0)
+            {
+                return;
+            }
+
+            _currentHealth = Mathf.Max(0, _currentHealth - amount);
             OnDamaged?.Invoke(amount);
 
-            if (_currentHealth <= 0)
+            if (_currentHealth == 0)
             {
                 Die();
             }

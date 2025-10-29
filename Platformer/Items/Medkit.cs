@@ -8,7 +8,14 @@ namespace Platformer.Items
     {
         [SerializeField] private int _healAmount = 25;
         [SerializeField] private float _rotationSpeed = 50f;
+        
+        private ObjectPool<Medkit> _pool;
 
+        public void Init(ObjectPool<Medkit> pool)
+        {
+            _pool = pool;
+        }
+        
         private void Update()
         {
             transform.Rotate(Vector3.up, _rotationSpeed * Time.deltaTime);
@@ -19,7 +26,7 @@ namespace Platformer.Items
             if (other.TryGetComponent(out PlayerHealth playerHealth))
             {
                 playerHealth.Heal(_healAmount);
-                gameObject.SetActive(false);
+                _pool.Return(this);
             }
         }
     }

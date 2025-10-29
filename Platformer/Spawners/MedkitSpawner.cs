@@ -18,6 +18,7 @@ namespace Platformer.Spawners
             Transform point = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
             Medkit medkit = Pool.Get();
             medkit.transform.position = point.position;
+            medkit.Init(Pool);
         }
     }
 }
